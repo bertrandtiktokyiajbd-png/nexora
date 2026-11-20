@@ -29,6 +29,9 @@ h1{font-size:25px}
 .author{font-size:13px;color:#94A3B8;margin-top:15px}
 #empty{text-align:center;color:#94A3B8;padding:25px}
 footer{text-align:center;color:#64748b;padding:30px;font-size:13px}
+.password-wrap{display:flex;gap:8px;align-items:center}
+.password-wrap input{flex:1;min-width:0}
+.password-wrap button{margin-top:0;padding:12px;background:#26344D;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -48,7 +51,10 @@ footer{text-align:center;color:#64748b;padding:30px;font-size:13px}
  <form id="authForm">
   <input id="name" placeholder="Ton nom" required>
   <input id="email" type="email" placeholder="Adresse e-mail" required>
-  <input id="password" type="password" placeholder="Mot de passe (6 caractères minimum)" minlength="6" required>
+  <div class="password-wrap">
+   <input id="password" type="password" placeholder="Mot de passe (6 caractères minimum)" minlength="6" required>
+   <button type="button" id="togglePassword" aria-label="Afficher le mot de passe">👁️</button>
+  </div>
   <button id="authButton" style="width:100%">S'inscrire</button>
  </form>
  <p id="toggle" style="color:#00D4FF;cursor:pointer">Déjà un compte ? Se connecter</p>
@@ -119,11 +125,22 @@ let currentUser=null;
 
 const $=id=>document.getElementById(id);
 
+$("togglePassword").onclick=()=>{
+ const password=$("password");
+ const visible=password.type==="password";
+ password.type=visible?"text":"password";
+ $("togglePassword").textContent=visible?"🙈":"👁️";
+ $("togglePassword").setAttribute(
+  "aria-label",visible?"Masquer le mot de passe":"Afficher le mot de passe"
+ );
+};
+
 $("toggle").onclick=()=>{
  signup=!signup;
  $("authTitle").textContent=signup?"Créer un compte":"Se connecter";
  $("authButton").textContent=signup?"S'inscrire":"Connexion";
  $("name").style.display=signup?"block":"none";
+ $("name").required=signup;
  $("toggle").textContent=signup?
  "Déjà un compte ? Se connecter":
  "Pas encore de compte ? S'inscrire";
@@ -192,8 +209,8 @@ async function loadPosts(){
    feed.innerHTML="<p id='empty'>Aucune idée pour le moment. Sois le premier à publier !</p>";
    return;
   }
-  snapshot.forEach(document=>{
-   const p=document.data();
+  snapshot.forEach(postDoc=>{
+   const p=postDoc.data();
    const article=document.createElement("article");
    article.className="post";
 
