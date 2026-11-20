@@ -7,164 +7,225 @@
 <title>NEXORA — Ideas connect</title>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;background:#0B0F1A;color:white;
- font-family:Arial,sans-serif;min-height:100vh;
- display:flex;justify-content:center;align-items:center;
- padding:20px;
-}
-.container{
- width:100%;max-width:440px;text-align:center;
-}
-.logo{
- font-size:42px;font-weight:900;letter-spacing:5px;
- background:linear-gradient(90deg,#00D4FF,#8A2BE2);
- -webkit-background-clip:text;color:transparent;
-}
-.subtitle{color:#94A3B8;margin:10px 0 30px}
-.card{
- background:#151C2C;border:1px solid #26344D;
- border-radius:18px;padding:25px;
-}
-h2{margin-top:0}
-input{
- width:100%;padding:14px;margin:8px 0;
- border-radius:9px;border:1px solid #35445E;
- background:#0B0F1A;color:white;font-size:15px;
-}
-button{
- width:100%;padding:14px;margin-top:12px;
- border:0;border-radius:9px;font-weight:bold;
- font-size:15px;cursor:pointer;
- background:linear-gradient(90deg,#00D4FF,#8A2BE2);
- color:white;
-}
+body{margin:0;background:#0B0F1A;color:white;font-family:Arial,sans-serif}
+header{padding:20px;background:#111827;border-bottom:1px solid #26344D;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.logo{font-size:27px;font-weight:900;letter-spacing:3px;background:linear-gradient(90deg,#00D4FF,#8A2BE2);-webkit-background-clip:text;color:transparent}
+button{border:0;border-radius:9px;padding:12px;background:linear-gradient(90deg,#00D4FF,#8A2BE2);color:white;font-weight:bold;cursor:pointer}
 .secondary{background:#26344D}
-.switch{color:#00D4FF;cursor:pointer;margin-top:20px}
-#message{font-size:14px;color:#00D4FF;margin-top:15px}
-#account{display:none}
-.small{font-size:12px;color:#94A3B8;margin-top:25px}
+main{max-width:850px;margin:30px auto;padding:0 15px}
+.card{background:#151C2C;border:1px solid #26344D;border-radius:15px;padding:20px;margin-bottom:20px}
+input,textarea,select{width:100%;padding:13px;margin:8px 0;background:#0B0F1A;border:1px solid #35445E;border-radius:8px;color:white;font-size:15px}
+textarea{min-height:110px;resize:vertical}
+h1,h2{margin-top:0}
+h1{font-size:25px}
+.subtitle,.muted{color:#94A3B8}
+#app{display:none}
+#auth{max-width:430px;margin:55px auto}
+#auth .logo{text-align:center;font-size:40px}
+#message,#postMessage{color:#00D4FF;font-size:14px}
+.post{background:#151C2C;border:1px solid #26344D;border-radius:13px;padding:18px;margin:15px 0}
+.post h3{margin:8px 0}
+.tag{display:inline-block;background:#26344D;color:#00D4FF;padding:6px 10px;border-radius:20px;font-size:12px}
+.author{font-size:13px;color:#94A3B8;margin-top:15px}
+#empty{text-align:center;color:#94A3B8;padding:25px}
+footer{text-align:center;color:#64748b;padding:30px;font-size:13px}
 </style>
 </head>
 <body>
-<div class="container">
+
+<header>
  <div class="logo">NEXORA</div>
- <p class="subtitle">Les idées se connectent. Les solutions émergent.</p>
-
- <div class="card" id="auth">
-  <h2 id="title">Créer un compte</h2>
-  <form id="form">
-   <input id="name" type="text" placeholder="Ton nom" required>
-   <input id="email" type="email" placeholder="Adresse e-mail" required>
-   <input id="password" type="password" placeholder="Mot de passe (6 caractères minimum)" minlength="6" required>
-   <button id="submit" type="submit">S'inscrire</button>
-  </form>
-  <p class="switch" id="toggle">Déjà un compte ? Se connecter</p>
-  <p id="message"></p>
+ <div>
+  <span id="userName" class="muted"></span>
+  <button class="secondary" id="logout">Déconnexion</button>
  </div>
+</header>
 
- <div class="card" id="account">
-  <h2>Bienvenue sur NEXORA !</h2>
-  <p id="welcome"></p>
-  <button class="secondary" id="logout">Se déconnecter</button>
- </div>
+<section id="auth" class="card">
+ <div class="logo">NEXORA</div>
+ <p class="subtitle" style="text-align:center">Les idées se connectent. Les solutions émergent.</p>
+ <h2 id="authTitle">Créer un compte</h2>
+ <form id="authForm">
+  <input id="name" placeholder="Ton nom" required>
+  <input id="email" type="email" placeholder="Adresse e-mail" required>
+  <input id="password" type="password" placeholder="Mot de passe (6 caractères minimum)" minlength="6" required>
+  <button id="authButton" style="width:100%">S'inscrire</button>
+ </form>
+ <p id="toggle" style="color:#00D4FF;cursor:pointer">Déjà un compte ? Se connecter</p>
+ <p id="message"></p>
+</section>
 
- <p class="small">Born in Africa. Built for the world.</p>
+<div id="app">
+ <main>
+  <section class="card">
+   <h1>Bienvenue sur NEXORA 🌍</h1>
+   <p class="subtitle">Born in Africa. Built for the world.</p>
+   <p>Une idée peut changer le monde. Partage la tienne.</p>
+  </section>
+
+  <section class="card">
+   <h2>Partager une idée</h2>
+   <form id="postForm">
+    <input id="postTitle" maxlength="100" placeholder="Titre de ton idée ou problème" required>
+    <textarea id="postContent" maxlength="2000" placeholder="Explique ton idée ou le problème que tu veux résoudre..." required></textarea>
+    <select id="category" required>
+     <option value="">Choisir une catégorie</option>
+     <option>Innovation</option>
+     <option>Éducation</option>
+     <option>Environnement</option>
+     <option>Entrepreneuriat</option>
+     <option>Communauté</option>
+     <option>Science</option>
+    </select>
+    <button type="submit" style="width:100%">Publier mon idée</button>
+   </form>
+   <p id="postMessage"></p>
+  </section>
+
+  <h2>Découvrir les idées</h2>
+  <div id="feed"><p id="empty">Chargement des publications...</p></div>
+ </main>
 </div>
 
+<footer>NEXORA © 2026 — Ideas connect. Solutions emerge.</footer>
+
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+import {initializeApp} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 import {
- getAuth, createUserWithEmailAndPassword,
- signInWithEmailAndPassword, signOut,
- onAuthStateChanged, updateProfile
+ getAuth,createUserWithEmailAndPassword,
+ signInWithEmailAndPassword,signOut,
+ onAuthStateChanged,updateProfile
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 import {
- getFirestore, doc, setDoc, serverTimestamp
+ getFirestore,doc,setDoc,serverTimestamp,
+ collection,addDoc,getDocs,query,orderBy
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
-const firebaseConfig = {
- apiKey: "AIzaSyB1XY1YyoEbG3vkPcsH6xhIkBLc8kiPBxk",
- authDomain: "nexora-26de9.firebaseapp.com",
- projectId: "nexora-26de9",
- storageBucket: "nexora-26de9.firebasestorage.app",
- messagingSenderId: "689884023919",
- appId: "1:689884023919:web:2e7c01dd518f1475c7519a"
+const firebaseConfig={
+ apiKey:"AIzaSyB1XY1YyoEbG3vkPcsH6xhIkBLc8kiPBxk",
+ authDomain:"nexora-26de9.firebaseapp.com",
+ projectId:"nexora-26de9",
+ storageBucket:"nexora-26de9.firebasestorage.app",
+ messagingSenderId:"689884023919",
+ appId:"1:689884023919:web:2e7c01dd518f1475c7519a"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
 
-let isSignup = true;
+let signup=true;
+let currentUser=null;
 
-const form = document.getElementById("form");
-const nameInput = document.getElementById("name");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const message = document.getElementById("message");
+const $=id=>document.getElementById(id);
 
-document.getElementById("toggle").onclick = () => {
- isSignup = !isSignup;
- document.getElementById("title").textContent =
-  isSignup ? "Créer un compte" : "Se connecter";
- document.getElementById("submit").textContent =
-  isSignup ? "S'inscrire" : "Connexion";
- nameInput.style.display = isSignup ? "block" : "none";
- document.getElementById("toggle").textContent =
-  isSignup ? "Déjà un compte ? Se connecter" :
-  "Pas encore de compte ? S'inscrire";
- message.textContent = "";
+$("toggle").onclick=()=>{
+ signup=!signup;
+ $("authTitle").textContent=signup?"Créer un compte":"Se connecter";
+ $("authButton").textContent=signup?"S'inscrire":"Connexion";
+ $("name").style.display=signup?"block":"none";
+ $("toggle").textContent=signup?
+ "Déjà un compte ? Se connecter":
+ "Pas encore de compte ? S'inscrire";
+ $("message").textContent="";
 };
 
-form.addEventListener("submit", async (e) => {
+$("authForm").addEventListener("submit",async e=>{
  e.preventDefault();
- message.textContent = "Chargement...";
-
- const email = emailInput.value.trim();
- const password = passwordInput.value;
- const name = nameInput.value.trim();
-
- try {
-  if (isSignup) {
-   const result = await createUserWithEmailAndPassword(auth,email,password);
-   if(name) await updateProfile(result.user,{displayName:name});
-
+ $("message").textContent="Chargement...";
+ try{
+  const email=$("email").value.trim();
+  const password=$("password").value;
+  if(signup){
+   const name=$("name").value.trim();
+   const result=await createUserWithEmailAndPassword(auth,email,password);
+   await updateProfile(result.user,{displayName:name});
    await setDoc(doc(db,"users",result.user.uid),{
-    name:name,
-    email:email,
-    createdAt:serverTimestamp()
+    name,email,createdAt:serverTimestamp()
    });
-  } else {
+  }else{
    await signInWithEmailAndPassword(auth,email,password);
   }
- } catch(error) {
-  const errors = {
-   "auth/email-already-in-use":"Cette adresse e-mail est déjà utilisée.",
+ }catch(error){
+  const errors={
+   "auth/email-already-in-use":"Cette adresse est déjà utilisée.",
    "auth/invalid-email":"Adresse e-mail invalide.",
    "auth/weak-password":"Mot de passe trop faible.",
-   "auth/invalid-credential":"E-mail ou mot de passe incorrect.",
-   "permission-denied":"Les règles Firestore doivent être configurées."
+   "auth/invalid-credential":"Identifiants incorrects."
   };
-  message.textContent = errors[error.code] ||
-   "Erreur : " + error.message;
+  $("message").textContent=errors[error.code]||"Erreur : "+error.message;
  }
 });
 
-document.getElementById("logout").onclick = async () => {
- await signOut(auth);
-};
+$("logout").onclick=()=>signOut(auth);
 
-onAuthStateChanged(auth,(user)=>{
- if(user){
-  document.getElementById("auth").style.display="none";
-  document.getElementById("account").style.display="block";
-  document.getElementById("welcome").textContent =
-   "Bonjour " + (user.displayName || user.email);
- } else {
-  document.getElementById("auth").style.display="block";
-  document.getElementById("account").style.display="none";
+$("postForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(!currentUser)return;
+
+ $("postMessage").textContent="Publication en cours...";
+ try{
+  await addDoc(collection(db,"posts"),{
+   title:$("postTitle").value.trim(),
+   content:$("postContent").value.trim(),
+   category:$("category").value,
+   authorId:currentUser.uid,
+   authorName:currentUser.displayName||"Utilisateur NEXORA",
+   createdAt:serverTimestamp()
+  });
+  $("postForm").reset();
+  $("postMessage").textContent="Publication réussie !";
+  await loadPosts();
+ }catch(error){
+  $("postMessage").textContent="Erreur : "+error.message;
  }
+});
+
+async function loadPosts(){
+ const feed=$("feed");
+ feed.innerHTML="<p id='empty'>Chargement...</p>";
+ try{
+  const q=query(collection(db,"posts"),orderBy("createdAt","desc"));
+  const snapshot=await getDocs(q);
+  feed.innerHTML="";
+  if(snapshot.empty){
+   feed.innerHTML="<p id='empty'>Aucune idée pour le moment. Sois le premier à publier !</p>";
+   return;
+  }
+  snapshot.forEach(document=>{
+   const p=document.data();
+   const article=document.createElement("article");
+   article.className="post";
+
+   const tag=document.createElement("span");
+   tag.className="tag";
+   tag.textContent=p.category||"Autre";
+
+   const title=document.createElement("h3");
+   title.textContent=p.title||"Sans titre";
+
+   const content=document.createElement("p");
+   content.textContent=p.content||"";
+
+   const author=document.createElement("div");
+   author.className="author";
+   author.textContent="Publié par "+(p.authorName||"Utilisateur NEXORA");
+
+   article.append(tag,title,content,author);
+   feed.appendChild(article);
+  });
+ }catch(error){
+  feed.innerHTML="<p id='empty'>Impossible de charger les publications : "+error.message+"</p>";
+ }
+}
+
+onAuthStateChanged(auth,async user=>{
+ currentUser=user;
+ $("auth").style.display=user?"none":"block";
+ $("app").style.display=user?"block":"none";
+ $("userName").textContent=user?
+ "Connecté : "+(user.displayName||user.email):"";
+ if(user)await loadPosts();
 });
 </script>
 </body>
