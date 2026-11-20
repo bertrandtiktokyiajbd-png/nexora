@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0B0F1A">
+  <title>NEXORA — Ideas connect</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0B0F1A;
+      color: white;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 7%;
+      border-bottom: 1px solid #20283a;
+    }
+    .logo {
+      font-size: 27px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      background: linear-gradient(90deg,#00D4FF,#8A2BE2);
+      color: transparent;
+      background-clip: text;
+    }
+    .menu { color: #94A3B8; font-size: 14px; }
+    main {
+      max-width: 850px;
+      margin: 90px auto;
+      padding: 20px;
+      text-align: center;
+    }
+    .tag {
+      color: #00D4FF;
+      border: 1px solid #16445c;
+      border-radius: 30px;
+      padding: 9px 16px;
+      display: inline-block;
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+    h1 {
+      font-size: clamp(42px, 9vw, 75px);
+      margin: 30px 0 18px;
+      line-height: 1.1;
+    }
+    h1 span {
+      background: linear-gradient(90deg,#00D4FF,#8A2BE2);
+      color: transparent;
+      background-clip: text;
+    }
+    .intro {
+      color: #94A3B8;
+      line-height: 1.8;
+      max-width: 570px;
+      margin: auto;
+    }
+    .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 35px;
+    }
+    button {
+      padding: 15px 24px;
+      border-radius: 9px;
+      font-weight: bold;
+      cursor: pointer;
+      border: 1px solid #334155;
+      background: transparent;
+      color: white;
+    }
+    .primary {
+      background: linear-gradient(100deg,#00AEEF,#7435D5);
+      border: none;
+    }
+    .bottom {
+      margin-top: 85px;
+      color: #64748b;
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">NEXORA</div>
+    <div class="menu">GLOBAL IDEAS PLATFORM</div>
+  </header>
+
+  <main>
+    <div class="tag">BORN IN AFRICA · BUILT FOR THE WORLD</div>
+
+    <h1>Ideas connect.<br><span>Solutions emerge.</span></h1>
+
+    <p class="intro">
+      Every great change begins with an idea.
+      Connect your intelligence with the world,
+      share your vision and help build solutions
+      that matter.
+    </p>
+
+    <div class="actions">
+      <button class="primary" onclick="alert('NEXORA arrive bientôt !')">
+        Découvrir NEXORA
+      </button>
+      <button onclick="alert('Notre communauté arrive bientôt !')">
+        Notre vision
+      </button>
+    </div>
+
+    <div class="bottom">
+      CONNECT · CREATE · TRANSFORM
+    </div>
+  </main>
+</body>
+</html>
