@@ -4,71 +4,168 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0B0F1A">
-<title>NEXORA — Les idées connectent le monde</title>
+<title>NEXORA — Ideas connect</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#0B0F1A;color:white;font-family:Arial,sans-serif;min-height:100vh}
-header{display:flex;justify-content:space-between;align-items:center;padding:22px 7%;border-bottom:1px solid #20283a}
-.logo{font-size:27px;font-weight:900;letter-spacing:3px;background:linear-gradient(90deg,#00D4FF,#8A2BE2);color:transparent;background-clip:text}
-select{background:#151d2d;color:white;padding:9px;border:1px solid #334155;border-radius:8px}
-main{max-width:850px;margin:90px auto;padding:20px;text-align:center}
-.tag{color:#00D4FF;border:1px solid #16445c;border-radius:30px;padding:9px 16px;display:inline-block;font-size:12px;letter-spacing:2px}
-h1{font-size:clamp(42px,9vw,75px);margin:30px 0 18px;line-height:1.1}
-h1 span{background:linear-gradient(90deg,#00D4FF,#8A2BE2);color:transparent;background-clip:text}
-.intro{color:#94A3B8;line-height:1.8;max-width:570px;margin:auto}
-.actions{display:flex;justify-content:center;flex-wrap:wrap;gap:14px;margin-top:35px}
-button{padding:15px 24px;border-radius:9px;font-weight:bold;cursor:pointer;border:1px solid #334155;background:transparent;color:white}
-.primary{background:linear-gradient(100deg,#00AEEF,#7435D5);border:none}
-.bottom{margin-top:85px;color:#64748b;font-size:12px;letter-spacing:2px}
+*{box-sizing:border-box}
+body{
+ margin:0;background:#0B0F1A;color:white;
+ font-family:Arial,sans-serif;min-height:100vh;
+ display:flex;justify-content:center;align-items:center;
+ padding:20px;
+}
+.container{
+ width:100%;max-width:440px;text-align:center;
+}
+.logo{
+ font-size:42px;font-weight:900;letter-spacing:5px;
+ background:linear-gradient(90deg,#00D4FF,#8A2BE2);
+ -webkit-background-clip:text;color:transparent;
+}
+.subtitle{color:#94A3B8;margin:10px 0 30px}
+.card{
+ background:#151C2C;border:1px solid #26344D;
+ border-radius:18px;padding:25px;
+}
+h2{margin-top:0}
+input{
+ width:100%;padding:14px;margin:8px 0;
+ border-radius:9px;border:1px solid #35445E;
+ background:#0B0F1A;color:white;font-size:15px;
+}
+button{
+ width:100%;padding:14px;margin-top:12px;
+ border:0;border-radius:9px;font-weight:bold;
+ font-size:15px;cursor:pointer;
+ background:linear-gradient(90deg,#00D4FF,#8A2BE2);
+ color:white;
+}
+.secondary{background:#26344D}
+.switch{color:#00D4FF;cursor:pointer;margin-top:20px}
+#message{font-size:14px;color:#00D4FF;margin-top:15px}
+#account{display:none}
+.small{font-size:12px;color:#94A3B8;margin-top:25px}
 </style>
 </head>
 <body>
-<header>
-<div class="logo">NEXORA</div>
-<select id="language" onchange="changeLanguage()">
-<option value="fr">Français</option>
-<option value="en">English</option>
-</select>
-</header>
-<main>
-<div class="tag" id="tag">NÉ EN AFRIQUE · CONÇU POUR LE MONDE</div>
-<h1 id="title">Les idées se connectent.<br><span>Les solutions émergent.</span></h1>
-<p class="intro" id="intro">Chaque grand changement commence par une idée. Connecte ton intelligence au monde, partage ta vision et contribue à construire des solutions qui comptent.</p>
-<div class="actions">
-<button class="primary" id="discover" onclick="alert('NEXORA arrive bientôt !')">Découvrir NEXORA</button>
-<button id="vision" onclick="alert('Notre vision arrive bientôt !')">Notre vision</button>
+<div class="container">
+ <div class="logo">NEXORA</div>
+ <p class="subtitle">Les idées se connectent. Les solutions émergent.</p>
+
+ <div class="card" id="auth">
+  <h2 id="title">Créer un compte</h2>
+  <form id="form">
+   <input id="name" type="text" placeholder="Ton nom" required>
+   <input id="email" type="email" placeholder="Adresse e-mail" required>
+   <input id="password" type="password" placeholder="Mot de passe (6 caractères minimum)" minlength="6" required>
+   <button id="submit" type="submit">S'inscrire</button>
+  </form>
+  <p class="switch" id="toggle">Déjà un compte ? Se connecter</p>
+  <p id="message"></p>
+ </div>
+
+ <div class="card" id="account">
+  <h2>Bienvenue sur NEXORA !</h2>
+  <p id="welcome"></p>
+  <button class="secondary" id="logout">Se déconnecter</button>
+ </div>
+
+ <p class="small">Born in Africa. Built for the world.</p>
 </div>
-<div class="bottom" id="bottom">CONNECTER · CRÉER · TRANSFORMER</div>
-</main>
-<script>
-const translations={
-fr:{
-tag:"NÉ EN AFRIQUE · CONÇU POUR LE MONDE",
-title:"Les idées se connectent.<br><span>Les solutions émergent.</span>",
-intro:"Chaque grand changement commence par une idée. Connecte ton intelligence au monde, partage ta vision et contribue à construire des solutions qui comptent.",
-discover:"Découvrir NEXORA",vision:"Notre vision",
-bottom:"CONNECTER · CRÉER · TRANSFORMER"
-},
-en:{
-tag:"BORN IN AFRICA · BUILT FOR THE WORLD",
-title:"Ideas connect.<br><span>Solutions emerge.</span>",
-intro:"Every great change begins with an idea. Connect your intelligence with the world, share your vision and help build solutions that matter.",
-discover:"Discover NEXORA",vision:"Our vision",
-bottom:"CONNECT · CREATE · TRANSFORM"
-}
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+import {
+ getAuth, createUserWithEmailAndPassword,
+ signInWithEmailAndPassword, signOut,
+ onAuthStateChanged, updateProfile
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+import {
+ getFirestore, doc, setDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+
+const firebaseConfig = {
+ apiKey: "AIzaSyB1XY1YyoEbG3vkPcsH6xhIkBLc8kiPBxk",
+ authDomain: "nexora-26de9.firebaseapp.com",
+ projectId: "nexora-26de9",
+ storageBucket: "nexora-26de9.firebasestorage.app",
+ messagingSenderId: "689884023919",
+ appId: "1:689884023919:web:2e7c01dd518f1475c7519a"
 };
-function changeLanguage(){
-const lang=document.getElementById("language").value;
-const t=translations[lang];
-document.getElementById("tag").textContent=t.tag;
-document.getElementById("title").innerHTML=t.title;
-document.getElementById("intro").textContent=t.intro;
-document.getElementById("discover").textContent=t.discover;
-document.getElementById("vision").textContent=t.vision;
-document.getElementById("bottom").textContent=t.bottom;
-document.documentElement.lang=lang;
-}
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let isSignup = true;
+
+const form = document.getElementById("form");
+const nameInput = document.getElementById("name");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const message = document.getElementById("message");
+
+document.getElementById("toggle").onclick = () => {
+ isSignup = !isSignup;
+ document.getElementById("title").textContent =
+  isSignup ? "Créer un compte" : "Se connecter";
+ document.getElementById("submit").textContent =
+  isSignup ? "S'inscrire" : "Connexion";
+ nameInput.style.display = isSignup ? "block" : "none";
+ document.getElementById("toggle").textContent =
+  isSignup ? "Déjà un compte ? Se connecter" :
+  "Pas encore de compte ? S'inscrire";
+ message.textContent = "";
+};
+
+form.addEventListener("submit", async (e) => {
+ e.preventDefault();
+ message.textContent = "Chargement...";
+
+ const email = emailInput.value.trim();
+ const password = passwordInput.value;
+ const name = nameInput.value.trim();
+
+ try {
+  if (isSignup) {
+   const result = await createUserWithEmailAndPassword(auth,email,password);
+   if(name) await updateProfile(result.user,{displayName:name});
+
+   await setDoc(doc(db,"users",result.user.uid),{
+    name:name,
+    email:email,
+    createdAt:serverTimestamp()
+   });
+  } else {
+   await signInWithEmailAndPassword(auth,email,password);
+  }
+ } catch(error) {
+  const errors = {
+   "auth/email-already-in-use":"Cette adresse e-mail est déjà utilisée.",
+   "auth/invalid-email":"Adresse e-mail invalide.",
+   "auth/weak-password":"Mot de passe trop faible.",
+   "auth/invalid-credential":"E-mail ou mot de passe incorrect.",
+   "permission-denied":"Les règles Firestore doivent être configurées."
+  };
+  message.textContent = errors[error.code] ||
+   "Erreur : " + error.message;
+ }
+});
+
+document.getElementById("logout").onclick = async () => {
+ await signOut(auth);
+};
+
+onAuthStateChanged(auth,(user)=>{
+ if(user){
+  document.getElementById("auth").style.display="none";
+  document.getElementById("account").style.display="block";
+  document.getElementById("welcome").textContent =
+   "Bonjour " + (user.displayName || user.email);
+ } else {
+  document.getElementById("auth").style.display="block";
+  document.getElementById("account").style.display="none";
+ }
+});
 </script>
 </body>
 </html>
