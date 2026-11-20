@@ -11,13 +11,13 @@ body{margin:0;background:#0B0F1A;color:white;font-family:Arial,sans-serif}
 header{padding:20px;background:#111827;border-bottom:1px solid #26344D;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
 .logo{font-size:27px;font-weight:900;letter-spacing:3px;background:linear-gradient(90deg,#00D4FF,#8A2BE2);-webkit-background-clip:text;color:transparent}
 button{border:0;border-radius:9px;padding:12px;background:linear-gradient(90deg,#00D4FF,#8A2BE2);color:white;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
 .secondary{background:#26344D}
 main{max-width:850px;margin:30px auto;padding:0 15px}
 .card{background:#151C2C;border:1px solid #26344D;border-radius:15px;padding:20px;margin-bottom:20px}
 input,textarea,select{width:100%;padding:13px;margin:8px 0;background:#0B0F1A;border:1px solid #35445E;border-radius:8px;color:white;font-size:15px}
 textarea{min-height:110px;resize:vertical}
 h1,h2{margin-top:0}
-h1{font-size:25px}
 .subtitle,.muted{color:#94A3B8}
 #app{display:none}
 #auth{max-width:430px;margin:55px auto}
@@ -32,6 +32,15 @@ footer{text-align:center;color:#64748b;padding:30px;font-size:13px}
 .password-wrap{display:flex;gap:8px;align-items:center}
 .password-wrap input{flex:1;min-width:0}
 .password-wrap button{margin-top:0;padding:12px;background:#26344D;white-space:nowrap}
+.comment-toggle{margin-top:15px;background:#26344D;width:100%}
+.comments-box{margin-top:15px;padding-top:15px;border-top:1px solid #35445E}
+.comments-box h4{margin:0 0 10px}
+.comment-form textarea{min-height:75px}
+.comment{background:#0B0F1A;border:1px solid #26344D;border-radius:9px;padding:12px;margin:10px 0}
+.comment-text{white-space:pre-wrap;overflow-wrap:anywhere}
+.comment-meta{font-size:12px;color:#94A3B8;margin-bottom:8px}
+.comment-info{font-size:13px;color:#94A3B8}
+.char-count{text-align:right;font-size:12px;color:#94A3B8}
 </style>
 </head>
 <body>
@@ -125,6 +134,18 @@ let currentUser=null;
 
 const $=id=>document.getElementById(id);
 
+function formatDate(timestamp){
+ if(!timestamp)return "À l'instant";
+ try{
+  return timestamp.toDate().toLocaleString("fr-FR",{
+   dateStyle:"short",
+   timeStyle:"short"
+  });
+ }catch(error){
+  return "Date indisponible";
+ }
+}
+
 $("togglePassword").onclick=()=>{
  const password=$("password");
  const visible=password.type==="password";
@@ -198,19 +219,61 @@ $("postForm").addEventListener("submit",async e=>{
  }
 });
 
+async function loadComments(postId,list){
+ list.innerHTML="<p class='comment-info'>Chargement des commentaires...</p>";
+ try{
+  const commentsQuery=query(
+   collection(db,"posts",postId,"comments"),
+   orderBy("createdAt","desc")
+  );
+  const snapshot=await getDocs(commentsQuery);
+  list.innerHTML="";
+
+  if(snapshot.empty){
+   list.innerHTML="<p class='comment-info'>Aucun commentaire pour le moment. Sois le premier !</p>";
+   return;
+  }
+
+  snapshot.forEach(commentDoc=>{
+   const c=commentDoc.data();
+
+   const item=document.createElement("div");
+   item.className="comment";
+
+   const meta=document.createElement("div");
+   meta.className="comment-meta";
+   meta.textContent=(c.authorName||"Utilisateur NEXORA")+" · "+formatDate(c.createdAt);
+
+   const text=document.createElement("div");
+   text.className="comment-text";
+   text.textContent=c.text||"";
+
+   item.append(meta,text);
+   list.appendChild(item);
+  });
+ }catch(error){
+  list.innerHTML="<p class='comment-info'>Impossible de charger les commentaires : "+error.message+"</p>";
+ }
+}
+
 async function loadPosts(){
  const feed=$("feed");
  feed.innerHTML="<p id='empty'>Chargement...</p>";
+
  try{
   const q=query(collection(db,"posts"),orderBy("createdAt","desc"));
   const snapshot=await getDocs(q);
   feed.innerHTML="";
+
   if(snapshot.empty){
    feed.innerHTML="<p id='empty'>Aucune idée pour le moment. Sois le premier à publier !</p>";
    return;
   }
+
   snapshot.forEach(postDoc=>{
    const p=postDoc.data();
+   const postId=postDoc.id;
+
    const article=document.createElement("article");
    article.className="post";
 
@@ -228,7 +291,86 @@ async function loadPosts(){
    author.className="author";
    author.textContent="Publié par "+(p.authorName||"Utilisateur NEXORA");
 
-   article.append(tag,title,content,author);
+   const toggleButton=document.createElement("button");
+   toggleButton.type="button";
+   toggleButton.className="comment-toggle";
+   toggleButton.textContent="Voir les commentaires";
+
+   const commentsBox=document.createElement("section");
+   commentsBox.className="comments-box";
+   commentsBox.hidden=true;
+
+   const commentsTitle=document.createElement("h4");
+   commentsTitle.textContent="Commentaires";
+
+   const commentForm=document.createElement("form");
+   commentForm.className="comment-form";
+
+   const textarea=document.createElement("textarea");
+   textarea.maxLength=500;
+   textarea.required=true;
+   textarea.placeholder="Écris ton commentaire...";
+
+   const counter=document.createElement("div");
+   counter.className="char-count";
+   counter.textContent="0 / 500";
+
+   textarea.addEventListener("input",()=>{
+    counter.textContent=textarea.value.length+" / 500";
+   });
+
+   const submitButton=document.createElement("button");
+   submitButton.type="submit";
+   submitButton.textContent="Envoyer le commentaire";
+
+   const commentsList=document.createElement("div");
+
+   commentForm.append(textarea,counter,submitButton);
+   commentsBox.append(commentsTitle,commentForm,commentsList);
+
+   let commentsLoaded=false;
+
+   toggleButton.onclick=async()=>{
+    commentsBox.hidden=!commentsBox.hidden;
+    if(!commentsBox.hidden&&!commentsLoaded){
+     commentsLoaded=true;
+     await loadComments(postId,commentsList);
+    }
+    toggleButton.textContent=commentsBox.hidden?
+     "Voir les commentaires":"Masquer les commentaires";
+   };
+
+   commentForm.addEventListener("submit",async e=>{
+    e.preventDefault();
+    if(!currentUser)return;
+
+    const commentText=textarea.value.trim();
+    if(!commentText||commentText.length>500)return;
+
+    submitButton.disabled=true;
+    submitButton.textContent="Envoi...";
+
+    try{
+     await addDoc(collection(db,"posts",postId,"comments"),{
+      text:commentText,
+      authorId:currentUser.uid,
+      authorName:currentUser.displayName||"Utilisateur NEXORA",
+      createdAt:serverTimestamp()
+     });
+
+     commentForm.reset();
+     counter.textContent="0 / 500";
+     commentsLoaded=true;
+     await loadComments(postId,commentsList);
+    }catch(error){
+     alert("Impossible d'envoyer le commentaire : "+error.message);
+    }finally{
+     submitButton.disabled=false;
+     submitButton.textContent="Envoyer le commentaire";
+    }
+   });
+
+   article.append(tag,title,content,author,toggleButton,commentsBox);
    feed.appendChild(article);
   });
  }catch(error){
